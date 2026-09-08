@@ -1,0 +1,12 @@
+
+import mensuration
+import sum
+import triangle
+import hello
+import time
+import os
+print("destruction of the world----deploying nuclear weapons, 5 min to launch, press ctrl+c to save the world...........")
+print(os.getpid)
+for i in range(101):
+    print(mensuration.area(i))
+    time.sleep(0.123456789)
