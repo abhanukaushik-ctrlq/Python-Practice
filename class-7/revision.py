@@ -3,7 +3,11 @@
 
 q = -7%4
 print(q)
-# ans is 1 because -7 = -2*4 + 1
-for i in range(1,1000000000000000):
-    print(2**i)
 
+
+
+print(round(3.5))
+print(round(2.5))
+print(round(9.92180003049283174,6))
+
+#python follows the rules of significant figure
