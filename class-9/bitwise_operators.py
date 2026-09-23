@@ -1,0 +1,6 @@
+print(13&10)
+print(5|3)
+print(9^3)
+print(5 and 3)
+print(5 or 3)
+print(4&1)
