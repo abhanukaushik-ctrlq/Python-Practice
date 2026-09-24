@@ -1,0 +1,5 @@
+#I am trying to mutate the string and it will not happen as the string is not mutable
+s = "hello"
+s[0] = "H"
+print(s)
+#type error
