@@ -1,15 +1,11 @@
 import math
-
 # ─────────────────────────────────────────────────────────────────
 # RapidKart Technologies — Inventory Audit Module
 # File: quality_checker.py | Author: Rohan M. | Status: Review
 # ─────────────────────────────────────────────────────────────────
-
-ADMIN_BIT = 0b100       # permission: full audit access (bit 2)
-WAREHOUSE_BIT = 0b010    # permission: warehouse view (bit 1)
-VIEWER_BIT = 0b001       # permission: read-only (bit 0)
-
-
+ADMIN_BIT = 0b100 # permission: full audit access (bit 2)
+WAREHOUSE_BIT = 0b010 # permission: warehouse view (bit 1)
+VIEWER_BIT = 0b001 # permission: read-only (bit 0)
 def audit_inventory(products, user_flags):
     """
     products : list of dicts — each has 'sku' (str), 'name' (str),
@@ -17,60 +13,64 @@ def audit_inventory(products, user_flags):
     user_flags: int, bit-encoded permissions for the calling user
     Returns : set of flagged SKU IDs requiring manual review
     """
-
     # ── 1. Verify the calling user has admin access ──────────────
-    if user_flags & ADMIN_BIT == 1:
+    if (user_flags & ADMIN_BIT) == 4:
         print("Full audit access granted")
     else:
         print("Limited access — read-only mode")
 
+
     # ── 2. Build the report header ───────────────────────────────
     total_skus = len(products)
-    header = "RapidKart Audit — SKUs scanned: " + total_skus
+    print(total_skus, type(total_skus))
+    header = "RapidKart Audit — SKUs scanned: " + str(total_skus)
+
 
     # ── 3. Track unique SKUs seen across warehouses ──────────────
-    seen_skus = {}                                                           ###### this is not[] and this{}
-
+    seen_skus = set()
     for p in products:
-        seen_skus.append(p["sku"])
+        seen_skus.add(p["sku"])
+
 
     # ── 4. Flag products with invalid stock or price data ─────────
-    flagged = {}
-
+    flagged = set()
     for p in products:
         if p["stock"] < 0 or p["price"] < 0:
             flagged.add(p["sku"])
+
 
     # ── 5. Spot-check delivery fee rate ──────────────────────────
     base_fee = 0.1
     surcharge = 0.2
     combined_rate = base_fee + surcharge
-
-    if combined_rate == 0.3:
+    if round(combined_rate,1) == 0.3:
         print("Delivery fee rate: OK")
     else:
-        print("Delivery fee rate: MISMATCH — investigate!")
+        print("Delivery fee rate: MISMATCH — investigate!")++
+
 
     # ── 6. Compute average product price ─────────────────────────
     total_value = sum(p["price"] for p in products)
-    avg_price = total_value // len(products)
-
+    avg_price = total_value / len(products)
     print(f"Average price: Rs.{avg_price:.2f}")
+
 
     # ── 7. Capitalise brand name for the report ───────────────────
     brand_name = "rapidkart"
-    brand_name[0] = brand_name[0].upper()
-
+    brand_name = brand_name[0].upper() + brand_name[1:]
     print(f"Brand: {brand_name}")
 
+    
     # ── 8. Flag out-of-stock items as removal candidates ─────────
     for p in products:
         is_premium = p.get("premium", False)
-
-        if p["stock"] == 0 or not is_premium:
+        if p["stock"] == 0 and not is_premium:
             flagged.add(p["sku"])
-
     print(header)
     print(f"Unique SKUs tracked: {len(seen_skus)}")
-
     return flagged
+
+p = [{"sku":"amzn101", "name":"iphone-15", "stock":-100, "price":95000.99, "premium": False}
+     , {"sku":"amzn102", "name":"apple-watch", "stock":10, "price":195000.5678, "premium": True}]
+bezos_bits = 0b111
+audit_inventory(p, bezos_bits)
